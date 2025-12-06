@@ -18,7 +18,7 @@ import astrbot.api.event.filter as filter
 from astrbot.api.event import AstrMessageEvent, MessageEventResult
 from astrbot.core.message.message_event_result import MessageChain
 from astrbot.api.all import Star, Context, Plain, Image
-from astrbot.api.provider import ProviderRequest
+from astrbot.core.provider.entities import ProviderRequest
 from astrbot.core.platform.message_session import MessageSesion
 from astrbot.core.platform.sources.aiocqhttp.aiocqhttp_message_event import AiocqhttpMessageEvent
 from astrbot.core import html_renderer
