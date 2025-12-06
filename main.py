@@ -7,13 +7,19 @@ import asyncio
 from dataclasses import dataclass, field
 from typing import Dict, Any, Optional, List, Literal, Callable, Awaitable
 
-import holidays
+try:
+    import holidays
+except ImportError:
+    holidays = None
+
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 import astrbot.api.event.filter as filter
 from astrbot.api.event import AstrMessageEvent, MessageEventResult
-from astrbot.api.all import Star, Context, ProviderRequest, Plain, Image
-from astrbot.core.platform import MessageSesion
+from astrbot.core.message.message_event_result import MessageChain
+from astrbot.api.all import Star, Context, Plain, Image
+from astrbot.api.provider import ProviderRequest
+from astrbot.core.platform.message_session import MessageSesion
 from astrbot.core.platform.sources.aiocqhttp.aiocqhttp_message_event import AiocqhttpMessageEvent
 from astrbot.core import html_renderer
 
@@ -138,10 +144,16 @@ async def get_recent_chats(context: Context, umo: str, count: int) -> str:
 
 def get_holiday_info(date: datetime.date) -> str:
     """获取节日信息（中国）"""
-    cn_holidays = holidays.CN()
-    holiday_name = cn_holidays.get(date)
-    if holiday_name:
-        return f"今天是 {holiday_name}"
+    if holidays is None:
+        return ""
+    
+    try:
+        cn_holidays = holidays.CN()
+        holiday_name = cn_holidays.get(date)
+        if holiday_name:
+            return f"今天是 {holiday_name}"
+    except Exception:
+        return ""
     return ""
 
 async def render_schedule_image(context: Context, schedule_data: dict) -> Optional[str]:
@@ -420,9 +432,9 @@ class Main(Star):
                     if adapter:
                         await AiocqhttpMessageEvent.send_message(
                             bot=adapter.bot,
-                            message=msg_chain,
-                            user_id=int(target),
-                            message_type="private"
+                            message_chain=MessageChain(msg_chain),
+                            session_id=str(target),
+                            is_group=False
                         )
                 else:
                     await self.context.send_message(target, msg_chain)
