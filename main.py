@@ -17,7 +17,8 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
 from astrbot.api import logger
-from astrbot.api.all import Star, Context, Plain, Image, StarTools
+from astrbot.api.all import Star, Context, Plain, Image
+from astrbot.core.star.star_tools import StarTools
 from astrbot.core.provider.entities import ProviderRequest
 from astrbot.core.message.message_event_result import MessageChain
 from astrbot.core.platform.sources.aiocqhttp.aiocqhttp_message_event import AiocqhttpMessageEvent
