@@ -480,7 +480,7 @@ class Main(Star):
                 event.set_result(MessageEventResult().message("今日尚未生成日程。"))
         
         elif action == "regenerate":
-            event.set_result(MessageEventResult().message("正在重新生成日程，请稍候..."))
+            event.set_result(MessageEventResult().message("重新生成日程"))
             schedule_info = await self.generate_schedule_with_llm()
             if schedule_info:
                 self.schedule_data[today_str] = schedule_info
