@@ -450,7 +450,7 @@ class Main(Star):
             if now_hour < 9: status = "刚开始"
             elif now_hour > 22: status = "即将结束"
             
-            inject_text = f"\n[今日生活状态 ({status})]\n穿搭：{info.get('outfit')}\n日程：{info.get('schedule')}\n请在回答中体现这些生活状态。"
+            inject_text = f"\n[System Info]\n当前时段状态：{status}\n今日穿搭设定：{info.get('outfit')}\n今日日程安排：{info.get('schedule')}\n(请将以上信息作为你当前行为和状态的背景参考，无需刻意向用户汇报)"
             req.system_prompt += inject_text
 
     @filter.command("life")
