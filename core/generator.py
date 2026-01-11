@@ -43,12 +43,10 @@ class SchedulerGenerator:
     async def generate_schedule(
         self, date: datetime.datetime | None = None, umo: str | None = None
     ) -> ScheduleData:
-        if self._generating:
-            raise RuntimeError("日程正在生成中，忽略本次请求")
         async with self._gen_lock:
             if self._generating:
-                raise RuntimeError("日程正在生成中，忽略本次请求")
-        self._generating = True
+                raise RuntimeError("schedule_generating")
+            self._generating = True
 
         data: ScheduleData | None = None
         date = date or datetime.datetime.now()
@@ -70,9 +68,10 @@ class SchedulerGenerator:
                 date=date_str, outfit="生成失败", schedule="生成失败", status="failed"
             )
         finally:
+            async with self._gen_lock:
+                self._generating = False
             if data:
                 self.data_mgr.set(data)
-            self._generating = False
 
     # ---------- context ----------
 
